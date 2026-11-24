@@ -123,3 +123,4 @@ document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelect
 function single(ch){const i=items.find(x=>x[0]===ch);if(!i)return;document.body.classList.add("single-mode");$("singleGlyph").textContent=i[0];$("singleName").textContent=i[1];$("singleDesc").textContent=i[4];makeQr($("singleQr"),i[0],180);$("singleListen").onclick=()=>speak(i[1]+". "+i[5]);$("singleExample").onclick=()=>speak(i[5])}
 render();const params=new URLSearchParams(location.search);if(params.has("jamo"))single(params.get("jamo"));
 </script></body></html>
+
