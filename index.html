@@ -62,10 +62,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:24px}
 <section id="catalog">
 <h2 class="section-title">자음 · 14개</h2><div class="grid" id="consonantGrid"></div>
 <h2 class="section-title">모음 · 10개</h2><div class="grid" id="vowelGrid"></div>
-<div class="urlbox no-print"><b>QR 주소 설정</b><br>웹 주소가 있는 환경에서만 QR을 생성합니다. 파일을 컴퓨터에서 직접 열면 휴대폰으로 연결되지 않으므로, 미리보기 웹 주소를 입력해 주세요.
-<input id="baseUrl" placeholder="https://미리보기-주소/">
-<button id="refreshQr" style="margin-top:8px">QR 코드 주소 적용</button>
-</div>
+
 </section>
 <section id="single">
 <div class="single-box">
@@ -102,12 +99,9 @@ const items=[
 ];
 const $=id=>document.getElementById(id);
 const productionBaseUrl="https://piorda-lab.github.io/hangeul-sori-qr/";
-let baseUrl=(location.protocol==="http:"||location.protocol==="https:")
-  ? location.origin+location.pathname.replace(/[^/]*$/,"")
-  : "";
+let baseUrl=productionBaseUrl;
 function targetUrl(ch){
-  if(!baseUrl)return "";
-  const safeBase=baseUrl.replace(/\/?$/,"/");
+  const safeBase=baseUrl.replace(/\/?$/,"");
   return safeBase+"?jamo="+encodeURIComponent(ch);
 }
 function makeQr(el,ch,size=100){el.innerHTML="";el.classList.add("qr-stage");const glyph=document.createElement("div");glyph.className="qr-glyph";glyph.textContent=ch;glyph.setAttribute("aria-hidden","true");const code=document.createElement("div");code.className="qr-code";el.append(glyph,code);if(!baseUrl){code.textContent="미리보기 주소 입력 후 QR 생성";code.style.fontSize="11px";code.style.padding="8px";return}if(!window.QRCode){code.textContent="QR 라이브러리 연결 필요";return}new QRCode(code,{text:targetUrl(ch),width:size,height:size,colorDark:"#24241f",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.H});}
@@ -118,7 +112,7 @@ function openDetail(i){$("dGlyph").textContent=i[0];$("dName").textContent=i[1];
 $("close").onclick=()=>$("detail").classList.remove("open");$("detail").onclick=e=>{if(e.target===$("detail"))$("detail").classList.remove("open")};
 function saveQr(el,ch){const code=el.querySelector(".qr-code");const canvas=code?.querySelector("canvas");const img=code?.querySelector("img");const src=canvas?canvas.toDataURL("image/png"):img?.src;if(!src){alert("QR 코드를 준비하지 못했습니다.");return}const a=document.createElement("a");a.href=src;a.download="한글소리QR_"+ch+".png";a.click()}
 $("printBtn").onclick=()=>window.print();
-$("refreshQr").onclick=()=>{const v=$("baseUrl").value.trim();if(v){try{const u=new URL(v);if(u.protocol!=="https:"||u.username||u.password||u.search||u.hash)throw new Error("unsafe URL");baseUrl=u.origin+u.pathname.replace(/\/?$/,"/");render();alert("HTTPS 주소를 적용했습니다.")}catch(e){alert("개인정보나 추적 매개변수가 없는 https:// 주소만 입력해 주세요.")}}};
+
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");const t=b.dataset.tab;$("consonantGrid").parentElement.querySelectorAll(".section-title")[0].style.display=t==="vowels"?"none":"";$("consonantGrid").style.display=t==="vowels"?"none":"grid";$("vowelGrid").parentElement.querySelectorAll(".section-title")[1].style.display=t==="consonants"?"none":"";$("vowelGrid").style.display=t==="consonants"?"none":"grid"});
 function single(ch){const i=items.find(x=>x[0]===ch);if(!i)return;document.body.classList.add("single-mode");$("singleGlyph").textContent=i[0];$("singleName").textContent=i[1];$("singleDesc").textContent=i[4];makeQr($("singleQr"),i[0],180);$("singleListen").onclick=()=>speak(i[2]==="consonant"?i[1]:i[5])}
 render();const params=new URLSearchParams(location.search);if(params.has("jamo"))single(params.get("jamo"));
