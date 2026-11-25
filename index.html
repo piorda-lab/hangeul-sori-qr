@@ -23,8 +23,8 @@ button.primary,.tab.active{background:var(--ink);color:white;border-color:var(--
 .glyph{font-size:48px;line-height:1.15;font-weight:650;margin:2px 0 4px}
 .name{font-size:13px;color:var(--muted);margin-bottom:10px}
 .qr{width:136px;height:136px;margin:0 auto 10px;position:relative;display:flex;align-items:center;justify-content:center;background:transparent;overflow:visible}
-.qr-glyph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:112px;line-height:1;font-weight:800;color:#b8a17b;opacity:.55;z-index:0;user-select:none}
-.qr-code{position:relative;z-index:1;width:108px;height:108px;padding:4px;background:#fff;border:1px solid #e5ddcf;border-radius:5px;display:flex;align-items:center;justify-content:center}
+.qr-glyph{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:36px;height:36px;border:2px solid #fff;border-radius:8px;background:#fffdf8;display:flex;align-items:center;justify-content:center;font-size:27px;line-height:1;font-weight:800;color:#282820;z-index:2;user-select:none;box-shadow:0 0 0 2px #24241f}
+.qr-code{position:relative;z-index:1;width:136px;height:136px;padding:0;background:#fff;border:0;border-radius:5px;display:flex;align-items:center;justify-content:center}
 .qr-code canvas,.qr-code img{display:block;max-width:100%;height:auto!important}
 .qr-code canvas{image-rendering:pixelated}
 .card button{font-size:13px;padding:8px 12px;margin:3px}
@@ -44,8 +44,8 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:24px}
 .single-mode #single{display:block;max-width:540px;margin:22px auto}
 .single-box{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:26px;text-align:center}
 .single-box .qr{width:220px;height:220px;margin:15px auto}
-.single-box .qr-glyph{font-size:190px}
-.single-box .qr-code{width:178px;height:178px;padding:5px}
+.single-box .qr-glyph{width:54px;height:54px;font-size:42px;border-radius:10px}
+.single-box .qr-code{width:220px;height:220px;padding:0}
 .urlbox{max-width:700px;margin:20px auto 0;padding:12px;border:1px dashed #c9bda9;border-radius:12px;font-size:12px;color:var(--muted);text-align:left}
 .urlbox input{width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;margin-top:6px;font:inherit}
 @media print{header,.intro,.toolbar,.urlbox,footer,.no-print{display:none!important}body{background:white}.grid{grid-template-columns:repeat(4,1fr)}.card{break-inside:avoid;box-shadow:none}.qr{width:100px;height:100px}}
@@ -54,7 +54,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:24px}
 <body>
 <header><div class="kicker">SCAN · LISTEN · LEARN</div><h1>한글 소리 QR</h1><p class="subtitle">한글 자모를 스캔하고, 이름과 소리를 들어보세요</p></header>
 <main>
-<p class="intro">자음과 모음 24개를 하나씩 만나보세요. 자모를 선택하거나 QR 코드를 스캔한 뒤 <b>발음 듣기</b>를 누르면 한국어 음성으로 이름과 예시를 들을 수 있습니다. QR 데이터는 스마트폰 인식률을 위해 정사각형을 유지하고, 바깥에 해당 자모의 조형을 더했습니다.</p>
+<p class="intro">자음과 모음 24개를 하나씩 만나보세요. 자모를 선택하거나 QR 코드를 스캔한 뒤 <b>발음 듣기</b>를 누르면 한국어 음성으로 자모의 이름과 기본 소리를 들을 수 있습니다. QR 코드 중앙에는 해당 자모가 표시됩니다.</p>
 <div class="toolbar no-print">
 <button class="tab active" data-tab="all">전체 24개</button><button class="tab" data-tab="consonants">자음 14개</button><button class="tab" data-tab="vowels">모음 10개</button>
 <button id="printBtn">QR 카드 인쇄</button>
@@ -62,8 +62,8 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:24px}
 <section id="catalog">
 <h2 class="section-title">자음 · 14개</h2><div class="grid" id="consonantGrid"></div>
 <h2 class="section-title">모음 · 10개</h2><div class="grid" id="vowelGrid"></div>
-<div class="urlbox no-print"><b>QR 주소 설정</b><br>사이트를 GitHub Pages에 공개한 뒤 주소가 자동으로 반영됩니다. 아직 공개 전이라면 아래에 최종 사이트 주소를 입력해 QR 코드를 미리 준비할 수 있습니다.
-<input id="baseUrl" placeholder="https://piorda-lab.github.io/hangeul-sori-qr/">
+<div class="urlbox no-print"><b>QR 주소 설정</b><br>웹 주소가 있는 환경에서만 QR을 생성합니다. 파일을 컴퓨터에서 직접 열면 휴대폰으로 연결되지 않으므로, 미리보기 웹 주소를 입력해 주세요.
+<input id="baseUrl" placeholder="https://미리보기-주소/">
 <button id="refreshQr" style="margin-top:8px">QR 코드 주소 적용</button>
 </div>
 </section>
@@ -73,28 +73,27 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:24px}
 <div class="qr" id="singleQr"></div>
 <p id="singleDesc"></p>
 <button class="listen" id="singleListen">▶ 이름과 발음 듣기</button>
-<button class="listen secondary" id="singleExample">예시 소리 다시 듣기</button>
 <p class="note">음성은 기기의 한국어 음성 기능을 사용합니다. 음성이 나오지 않으면 기기 음량과 한국어 음성 설정을 확인해 주세요.</p>
 </div></section>
 </main><footer>한글 소리 QR · 한국어 자모 학습 프로젝트</footer>
-<div class="detail" id="detail"><div class="panel"><button class="close" id="close">×</button><div class="kicker">HANGEUL SOUND</div><div class="glyph" id="dGlyph"></div><h2 id="dName"></h2><div class="qr" id="dQr"></div><p id="dDesc"></p><button class="listen" id="dListen">▶ 이름과 발음 듣기</button><button class="listen secondary" id="dExample">예시 소리 다시 듣기</button><p class="note">자음은 홀로 소리 내기 어려운 글자이므로, 이름을 들은 뒤 모음과 결합한 예시 음절로 소리를 익힙니다.</p></div></div>
+<div class="detail" id="detail"><div class="panel"><button class="close" id="close">×</button><div class="kicker">HANGEUL SOUND</div><div class="glyph" id="dGlyph"></div><h2 id="dName"></h2><div class="qr" id="dQr"></div><p id="dDesc"></p><button class="listen" id="dListen">▶ 이름과 발음 듣기</button><p class="note">음성은 기기의 한국어 음성 기능을 사용합니다. 음성이 나오지 않으면 기기 음량과 한국어 음성 설정을 확인해 주세요.</p></div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 const items=[
-["ㄱ","기역","consonant","가, 고, 구","ㄱ은 '기역'입니다. '가, 고, 구'의 첫소리에서 소리를 들어보세요.","기역. 가, 고, 구."],
-["ㄴ","니은","consonant","나, 너, 누","ㄴ은 '니은'입니다. '나, 너, 누'의 첫소리에서 소리를 들어보세요.","니은. 나, 너, 누."],
-["ㄷ","디귿","consonant","다, 도, 두","ㄷ은 '디귿'입니다. '다, 도, 두'의 첫소리에서 소리를 들어보세요.","디귿. 다, 도, 두."],
-["ㄹ","리을","consonant","라, 로, 루","ㄹ은 '리을'입니다. '라, 로, 루'의 첫소리에서 소리를 들어보세요.","리을. 라, 로, 루."],
-["ㅁ","미음","consonant","마, 모, 무","ㅁ은 '미음'입니다. '마, 모, 무'의 첫소리에서 소리를 들어보세요.","미음. 마, 모, 무."],
-["ㅂ","비읍","consonant","바, 보, 부","ㅂ은 '비읍'입니다. '바, 보, 부'의 첫소리에서 소리를 들어보세요.","비읍. 바, 보, 부."],
-["ㅅ","시옷","consonant","사, 소, 수","ㅅ은 '시옷'입니다. '사, 소, 수'의 첫소리에서 소리를 들어보세요.","시옷. 사, 소, 수."],
-["ㅇ","이응","consonant","아, 오, 우","ㅇ은 '이응'입니다. 음절 첫머리에서는 소리가 없고, 받침에서는 '응'의 받침 소리가 납니다.","이응. 아, 오, 우. 첫소리의 이응은 소리가 없습니다."],
-["ㅈ","지읒","consonant","자, 조, 주","ㅈ은 '지읒'입니다. '자, 조, 주'의 첫소리에서 소리를 들어보세요.","지읒. 자, 조, 주."],
-["ㅊ","치읓","consonant","차, 초, 추","ㅊ은 '치읓'입니다. '차, 초, 추'의 첫소리에서 소리를 들어보세요.","치읓. 차, 초, 추."],
-["ㅋ","키읔","consonant","카, 코, 쿠","ㅋ은 '키읔'입니다. '카, 코, 쿠'의 첫소리에서 소리를 들어보세요.","키읔. 카, 코, 쿠."],
-["ㅌ","티읕","consonant","타, 토, 투","ㅌ은 '티읕'입니다. '타, 토, 투'의 첫소리에서 소리를 들어보세요.","티읕. 타, 토, 투."],
-["ㅍ","피읖","consonant","파, 포, 푸","ㅍ은 '피읖'입니다. '파, 포, 푸'의 첫소리에서 소리를 들어보세요.","피읖. 파, 포, 푸."],
-["ㅎ","히읗","consonant","하, 호, 후","ㅎ은 '히읗'입니다. '하, 호, 후'의 첫소리에서 소리를 들어보세요.","히읗. 하, 호, 후."],
+["ㄱ","기역","consonant","가, 고, 구","ㄱ은 '기역'입니다. '가, 고, 구'의 첫소리에서 소리를 들어보세요.","기역."],
+["ㄴ","니은","consonant","나, 너, 누","ㄴ은 '니은'입니다. '나, 너, 누'의 첫소리에서 소리를 들어보세요.","니은."],
+["ㄷ","디귿","consonant","다, 도, 두","ㄷ은 '디귿'입니다. '다, 도, 두'의 첫소리에서 소리를 들어보세요.","디귿."],
+["ㄹ","리을","consonant","라, 로, 루","ㄹ은 '리을'입니다. '라, 로, 루'의 첫소리에서 소리를 들어보세요.","리을."],
+["ㅁ","미음","consonant","마, 모, 무","ㅁ은 '미음'입니다. '마, 모, 무'의 첫소리에서 소리를 들어보세요.","미음."],
+["ㅂ","비읍","consonant","바, 보, 부","ㅂ은 '비읍'입니다. '바, 보, 부'의 첫소리에서 소리를 들어보세요.","비읍."],
+["ㅅ","시옷","consonant","사, 소, 수","ㅅ은 '시옷'입니다. '사, 소, 수'의 첫소리에서 소리를 들어보세요.","시옷."],
+["ㅇ","이응","consonant","아, 오, 우","ㅇ은 '이응'입니다. 음절 첫머리에서는 소리가 없고, 받침에서는 '응'의 받침 소리가 납니다.","이응."],
+["ㅈ","지읒","consonant","자, 조, 주","ㅈ은 '지읒'입니다. '자, 조, 주'의 첫소리에서 소리를 들어보세요.","지읒."],
+["ㅊ","치읓","consonant","차, 초, 추","ㅊ은 '치읓'입니다. '차, 초, 추'의 첫소리에서 소리를 들어보세요.","치읓."],
+["ㅋ","키읔","consonant","카, 코, 쿠","ㅋ은 '키읔'입니다. '카, 코, 쿠'의 첫소리에서 소리를 들어보세요.","키읔."],
+["ㅌ","티읕","consonant","타, 토, 투","ㅌ은 '티읕'입니다. '타, 토, 투'의 첫소리에서 소리를 들어보세요.","티읕."],
+["ㅍ","피읖","consonant","파, 포, 푸","ㅍ은 '피읖'입니다. '파, 포, 푸'의 첫소리에서 소리를 들어보세요.","피읖."],
+["ㅎ","히읗","consonant","하, 호, 후","ㅎ은 '히읗'입니다. '하, 호, 후'의 첫소리에서 소리를 들어보세요.","히읗."],
 ["ㅏ","아","vowel","아","ㅏ는 '아' 소리입니다.","아."],["ㅑ","야","vowel","야","ㅑ는 '야' 소리입니다.","야."],
 ["ㅓ","어","vowel","어","ㅓ는 '어' 소리입니다.","어."],["ㅕ","여","vowel","여","ㅕ는 '여' 소리입니다.","여."],
 ["ㅗ","오","vowel","오","ㅗ는 '오' 소리입니다.","오."],["ㅛ","요","vowel","요","ㅛ는 '요' 소리입니다.","요."],
@@ -105,22 +104,22 @@ const $=id=>document.getElementById(id);
 const productionBaseUrl="https://piorda-lab.github.io/hangeul-sori-qr/";
 let baseUrl=(location.protocol==="http:"||location.protocol==="https:")
   ? location.origin+location.pathname.replace(/[^/]*$/,"")
-  : productionBaseUrl;
+  : "";
 function targetUrl(ch){
-  const safeBase=(baseUrl||productionBaseUrl).replace(/\/?$/,"/");
+  if(!baseUrl)return "";
+  const safeBase=baseUrl.replace(/\/?$/,"/");
   return safeBase+"?jamo="+encodeURIComponent(ch);
 }
-function makeQr(el,ch,size=100){el.innerHTML="";el.classList.add("qr-stage");const glyph=document.createElement("div");glyph.className="qr-glyph";glyph.textContent=ch;glyph.setAttribute("aria-hidden","true");const code=document.createElement("div");code.className="qr-code";el.append(glyph,code);if(!window.QRCode){code.textContent="QR 라이브러리 연결 필요";return}new QRCode(code,{text:targetUrl(ch),width:size,height:size,colorDark:"#24241f",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.H});}
-function card(item){const [ch,name,type,example,desc,speech]=item;const el=document.createElement("article");el.className="card";el.innerHTML=`<div class="glyph">${ch}</div><div class="name">${name}</div><div class="qr"></div><button class="primary">발음 듣기</button><button class="open">자세히</button><button class="save">QR 저장</button>`;makeQr(el.querySelector(".qr"),ch);el.querySelector(".primary").onclick=()=>speak(speech);el.querySelector(".open").onclick=()=>openDetail(item);el.querySelector(".save").onclick=()=>saveQr(el.querySelector(".qr"),ch);return el}
+function makeQr(el,ch,size=100){el.innerHTML="";el.classList.add("qr-stage");const glyph=document.createElement("div");glyph.className="qr-glyph";glyph.textContent=ch;glyph.setAttribute("aria-hidden","true");const code=document.createElement("div");code.className="qr-code";el.append(glyph,code);if(!baseUrl){code.textContent="미리보기 주소 입력 후 QR 생성";code.style.fontSize="11px";code.style.padding="8px";return}if(!window.QRCode){code.textContent="QR 라이브러리 연결 필요";return}new QRCode(code,{text:targetUrl(ch),width:size,height:size,colorDark:"#24241f",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.H});}
+function card(item){const [ch,name,type,example,desc,speech]=item;const el=document.createElement("article");el.className="card";el.innerHTML=`<div class="glyph">${ch}</div><div class="name">${name}</div><div class="qr"></div><button class="primary">발음 듣기</button><button class="open">자세히</button><button class="save">QR 저장</button>`;makeQr(el.querySelector(".qr"),ch);el.querySelector(".primary").onclick=()=>speak(type==="consonant"?name:speech);el.querySelector(".open").onclick=()=>openDetail(item);el.querySelector(".save").onclick=()=>saveQr(el.querySelector(".qr"),ch);return el}
 function render(){ $("consonantGrid").innerHTML="";$("vowelGrid").innerHTML="";items.forEach(i=>{(i[2]==="consonant"?$("consonantGrid"):$("vowelGrid")).appendChild(card(i))})}
 function speak(text){if(!("speechSynthesis"in window)){alert("이 브라우저는 음성 재생을 지원하지 않습니다.");return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="ko-KR";u.rate=.65;u.pitch=1;speechSynthesis.speak(u)}
-function openDetail(i){$("dGlyph").textContent=i[0];$("dName").textContent=i[1];$("dDesc").textContent=i[4];makeQr($("dQr"),i[0],180);$("dListen").onclick=()=>speak(i[1]+". "+i[5]);$("dExample").onclick=()=>speak(i[5]);$("detail").classList.add("open")}
+function openDetail(i){$("dGlyph").textContent=i[0];$("dName").textContent=i[1];$("dDesc").textContent=i[4];makeQr($("dQr"),i[0],180);$("dListen").onclick=()=>speak(i[2]==="consonant"?i[1]:i[5]);$("detail").classList.add("open")}
 $("close").onclick=()=>$("detail").classList.remove("open");$("detail").onclick=e=>{if(e.target===$("detail"))$("detail").classList.remove("open")};
 function saveQr(el,ch){const code=el.querySelector(".qr-code");const canvas=code?.querySelector("canvas");const img=code?.querySelector("img");const src=canvas?canvas.toDataURL("image/png"):img?.src;if(!src){alert("QR 코드를 준비하지 못했습니다.");return}const a=document.createElement("a");a.href=src;a.download="한글소리QR_"+ch+".png";a.click()}
 $("printBtn").onclick=()=>window.print();
 $("refreshQr").onclick=()=>{const v=$("baseUrl").value.trim();if(v){try{const u=new URL(v);if(u.protocol!=="https:"||u.username||u.password||u.search||u.hash)throw new Error("unsafe URL");baseUrl=u.origin+u.pathname.replace(/\/?$/,"/");render();alert("HTTPS 주소를 적용했습니다.")}catch(e){alert("개인정보나 추적 매개변수가 없는 https:// 주소만 입력해 주세요.")}}};
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");const t=b.dataset.tab;$("consonantGrid").parentElement.querySelectorAll(".section-title")[0].style.display=t==="vowels"?"none":"";$("consonantGrid").style.display=t==="vowels"?"none":"grid";$("vowelGrid").parentElement.querySelectorAll(".section-title")[1].style.display=t==="consonants"?"none":"";$("vowelGrid").style.display=t==="consonants"?"none":"grid"});
-function single(ch){const i=items.find(x=>x[0]===ch);if(!i)return;document.body.classList.add("single-mode");$("singleGlyph").textContent=i[0];$("singleName").textContent=i[1];$("singleDesc").textContent=i[4];makeQr($("singleQr"),i[0],180);$("singleListen").onclick=()=>speak(i[1]+". "+i[5]);$("singleExample").onclick=()=>speak(i[5])}
+function single(ch){const i=items.find(x=>x[0]===ch);if(!i)return;document.body.classList.add("single-mode");$("singleGlyph").textContent=i[0];$("singleName").textContent=i[1];$("singleDesc").textContent=i[4];makeQr($("singleQr"),i[0],180);$("singleListen").onclick=()=>speak(i[2]==="consonant"?i[1]:i[5])}
 render();const params=new URLSearchParams(location.search);if(params.has("jamo"))single(params.get("jamo"));
 </script></body></html>
-
